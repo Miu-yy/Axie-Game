@@ -1,37 +1,71 @@
 import pygame
 from sprites import *
-import tasks
+#from render import *
+#from interactable import *
+import interactable, render
 
 window = pygame.display.set_mode((512,256))
-tasks = tasks.tasks
 
-# Import background
-tank = pygame.image.load("tank-32x32.png")
-tank = pygame.transform.scale_by(tank,16)
 
-# Draw background
-tankLocation = pygame.math.Vector2(0,0)
-tankSprite = pygame.Rect(0,256,512,256)
-window.blit(tank,tankLocation,tankSprite)
+class Input():
+    def __init__(self):
+        self.running = True
 
-# Groups
-mo = pygame.sprite.GroupSingle()
-mo.add(Mo())
-stumpy = pygame.sprite.GroupSingle()
-stumpy.add(Stumpy())
-decorations = pygame.sprite.Group()
-decorations.add(Decorations('log',2))
+        self.mouse_move = False
+        self.mouse_click = False
+        self.mouse_pos = (0,0)
+        self.mouse_button = 0
 
-running = True
-while running:
-    mo.draw(window)
-    stumpy.draw(window)
-    decorations.draw(window)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            break
-    pygame.display.update()
+        self.hover_little = False
+        self.hover_button = False
+
+        self.tasks = False
+
+
+    def process_input(self):
+        # hover_little = False
+        # hover_little = render.tasks_little.draw(self.mouse_pos,window)
+        if self.hover_little:
+            # hover_button = False
+            # hover_button = render.tasks_button.draw(self.mouse_pos,window)
+            if self.hover_button and self.mouse_click:
+                self.tasks = True
+        else:
+            pass
+        print(self.tasks)
+
+
+    def get_input(self):
+        while self.running:
+            render.render(window)
+            self.hover_little = render.tasks_little.draw(self.mouse_pos, window)
+            if self.hover_little and not self.tasks:
+                render.render(window)
+                self.hover_button = render.tasks_button.draw(self.mouse_pos, window)
+            if self.tasks:
+                render.tasks_tab(window)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    break
+                elif event.type == pygame.MOUSEMOTION:
+                    self.mouse_pos = event.pos
+                    self.mouse_move = True
+                    #tasks = tasksLittle.draw(mouse_pos, window)
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    self.mouse_pos = event.pos
+                    self.mouse_button = event.button
+                    self.mouse_click = True
+                self.process_input()
+            pygame.display.update()
+
+    def run(self):
+        while self.running:
+            self.get_input()
+
+
+play = Input()
+play.run()
 
 pygame.quit()
 

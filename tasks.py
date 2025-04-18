@@ -1,3 +1,5 @@
 import pygame
 
-tasks = pygame.display.set_mode((384,512))
+view_tasks = pygame.image.load("tasksmenu-32x32.png")
+tasks_rect = pygame.Rect(0,0,32,32)
+

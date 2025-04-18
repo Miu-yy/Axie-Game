@@ -11,7 +11,7 @@ class Mo(pygame.sprite.Sprite):
         self.rect = pygame.Rect(0,0,152,48)
         self.image = sprites.subsurface(self.rect)
         #self.rect.topleft = (32,32)
-        pygame.Rect.update(self.rect,32,32,0,0)
+        pygame.Rect.update(self.rect,256,32,0,0)
 
 
 class Stumpy(pygame.sprite.Sprite):
@@ -20,7 +20,7 @@ class Stumpy(pygame.sprite.Sprite):
         self.rect = pygame.Rect(0,64,152,48)
         self.image = sprites.subsurface(self.rect)
         #self.rect.topleft = (256,176)
-        pygame.Rect.update(self.rect,256,176,0,0)
+        pygame.Rect.update(self.rect,288,176,0,0)
 
 
 class Decorations(pygame.sprite.Sprite):
@@ -31,7 +31,7 @@ class Decorations(pygame.sprite.Sprite):
             self.rect = pygame.Rect(0,128,168,48)
             self.image = sprites.subsurface(self.rect)
             #self.rect.topleft = ()
-            pygame.Rect.update(self.rect,240,184,0,0)
+            pygame.Rect.update(self.rect,128,184,0,0)
 
         elif item == 'rock':
             self.rect = pygame.Rect(192,144,48,32)
