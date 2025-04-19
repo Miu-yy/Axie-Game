@@ -1,4 +1,6 @@
 import pygame
+
+import tasks
 from sprites import *
 #from render import *
 #from interactable import *
@@ -23,27 +25,29 @@ class Input():
 
 
     def process_input(self):
-        # hover_little = False
-        # hover_little = render.tasks_little.draw(self.mouse_pos,window)
-        if self.hover_little:
-            # hover_button = False
-            # hover_button = render.tasks_button.draw(self.mouse_pos,window)
-            if self.hover_button and self.mouse_click:
-                self.tasks = True
-        else:
-            pass
-        print(self.tasks)
+        pass
+        # if self.tasks:
+        #     render.tasks_tab(window)
+        #tasks()
+               # if self.hover_little:
+        #     if self.hover_button and self.mouse_click:
+        #         self.tasks = True
+        # else:
+        #     pass
 
 
     def get_input(self):
         while self.running:
             render.render(window)
-            self.hover_little = render.tasks_little.draw(self.mouse_pos, window)
-            if self.hover_little and not self.tasks:
-                render.render(window)
-                self.hover_button = render.tasks_button.draw(self.mouse_pos, window)
+            self.tasks = tasks.render_tasks(window, self.tasks, self.mouse_pos, self.mouse_click)
             if self.tasks:
                 render.tasks_tab(window)
+            # self.hover_little = render.tasks_little.draw(self.mouse_pos, window)
+            # if self.hover_little and not self.tasks:
+            #     render.render(window)
+            #     self.hover_button = render.tasks_button.draw(self.mouse_pos, window)
+            # if self.tasks:
+            #     render.tasks_tab(window)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
