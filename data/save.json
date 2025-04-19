@@ -2,20 +2,20 @@
   "points": 0,
 
   "tasks": [ {
-    "title" : "task1",
+    "title": "task1",
     "value": 50,
     "completed": false
   } ],
 
   "owned_decorations": [ {
-    "item": "log",
+    "item": "weed",
     "level": 0
   } ],
 
   "placed_decorations": [ {
-    "item": "log",
+    "item": "weed",
     "level": 0,
-    "x": 0,
-    "y": 0
+    "x": 1000,
+    "y": 1000
   } ]
 }

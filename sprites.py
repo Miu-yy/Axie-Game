@@ -64,3 +64,11 @@ class Decorations(pygame.sprite.Sprite):
             self.image = sprites.subsurface(self.rect)
             #self.rect.topleft = ()
             pygame.Rect.update(self.rect,184,176,0,0)
+
+
+mo = pygame.sprite.GroupSingle()
+mo.add(Mo())
+stumpy = pygame.sprite.GroupSingle()
+stumpy.add(Stumpy())
+decorations = pygame.sprite.Group()
+decorations.add(Decorations('log',2))

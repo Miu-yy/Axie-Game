@@ -1,19 +1,34 @@
+import pygame.time
+
 from sprites import *
 #from render import *
 #from interactable import *
 from ui import tasks
 from draw import render
-from game_save import *
+from state import *
+
+sprites = pygame.image.load("assets/sprites/sprites-32x32.png")
+sprites = pygame.transform.scale_by(sprites, 4)
+rect = pygame.Rect(0, 0, 60, 60)
+image = sprites.subsurface(rect)
 
 window = pygame.display.set_mode((512,256))
+clock = pygame.time.Clock()
 
-# Extract save data
-backup_save_data = load_save("save")
-game_data = load_save("save")
+pygame.display.set_caption('Axie Game')
+pygame.display.set_icon(image)
 
 class Input():
     def __init__(self):
-        self.running = True
+        self.state = State()
+        self.running = self.state.running
+
+        # TEMP
+        self.state.load_save_game()
+        self.state.player.update_points(5)
+        self.state.player.add_task("test",3,False)
+        print(self.state.player.tasks,"/",self.state.player.points)
+        # TEMP
 
         self.mouse_move = False
         self.mouse_click = False
@@ -24,6 +39,8 @@ class Input():
         self.hover_button = False
 
         self.tasks = False
+        self.buy = False
+        self.place = False
 
 
     def process_input(self):
@@ -36,7 +53,6 @@ class Input():
         #         self.tasks = True
         # else:
         #     pass
-
 
     def get_input(self):
         while self.running:
@@ -64,15 +80,57 @@ class Input():
                     self.mouse_click = True
                 self.process_input()
             pygame.display.update()
+            clock.tick(60)
+
+    def update_state(self):
+        if self.tasks:
+            self.state.tasks_menu = True
+        if self.state.tasks_menu:
+            render.tasks_tab(window)
+
+        if self.buy:
+            self.state.buy_menu = True
+        if self.state.buy_menu:
+            render.tasks_tab(window)
+
+        if self.place:
+            self.state.placing_overlay = True
+        if self.state.placing_overlay:
+            render.tasks_tab(window)
+
+    def process_event(self):
+        self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click)
+
+    def game_loop(self):
+        while self.running:
+            self.mouse_move = False
+            self.mouse_click = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.MOUSEMOTION:
+                    self.mouse_pos = event.pos
+                    self.mouse_move = True
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    self.mouse_pos = event.pos
+                    self.mouse_button = event.button
+                    self.mouse_click = True
+                self.process_event()
+            self.update_state()
+
+            pygame.display.update()
+            clock.tick(60)
+
 
     def run(self):
         while self.running:
-            self.get_input()
+            self.game_loop()
 
-print(backup_save_data)
 
 play = Input()
 play.run()
+
+print(Player)
 
 pygame.quit()
 
