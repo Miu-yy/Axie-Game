@@ -1,13 +1,15 @@
-import pygame
-
-import tasks
 from sprites import *
 #from render import *
 #from interactable import *
-import interactable, render
+from ui import tasks
+from draw import render
+from game_save import *
 
 window = pygame.display.set_mode((512,256))
 
+# Extract save data
+backup_save_data = load_save("save")
+game_data = load_save("save")
 
 class Input():
     def __init__(self):
@@ -67,6 +69,7 @@ class Input():
         while self.running:
             self.get_input()
 
+print(backup_save_data)
 
 play = Input()
 play.run()

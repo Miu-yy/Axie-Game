@@ -1,13 +1,12 @@
-import pygame
 from sprites import *
-import interactable,tasks
+import button
 
 # Import background
-tank = pygame.image.load("tank-32x32.png")
+tank = pygame.image.load("assets/background/tank-32x32.png")
 tank = pygame.transform.scale_by(tank,16)
 
 # Import tasks TEMP
-view_tasks = pygame.image.load("tasksmenu-32x32.png")
+view_tasks = pygame.image.load("assets/ui/tasksmenu-32x32.png")
 view_tasks = pygame.transform.scale_by(view_tasks,7)
 tasks_rect = pygame.Rect(16,16,224,224)
 
@@ -36,7 +35,7 @@ decorations = pygame.sprite.Group()
 decorations.add(Decorations('log',2))
 
 # Buttons
-tasks_little = interactable.Button("tasks-32x32.png",1,16,16,128,76)
-tasks_button = interactable.Button("tasks-32x32.png",4,16,16,128,76)
+tasks_little = button.Button("assets/ui/tasks-32x32.png", 1, 16, 16, 128, 76)
+tasks_button = button.Button("assets/ui/tasks-32x32.png", 4, 16, 16, 128, 76)
 tasks = False
 #tasksButton.draw(window)

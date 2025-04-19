@@ -1,8 +1,22 @@
 import pygame
 
+# Import background
+tank = pygame.image.load("assets/background/tank-32x32.png")
+tank = pygame.transform.scale_by(tank,16)
+
 # Import sprites
-sprites = pygame.image.load("sprites-32x32.png")
+sprites = pygame.image.load("assets/sprites/sprites-32x32.png")
 sprites = pygame.transform.scale_by(sprites, 8)
+
+# Import tasks menu
+view_tasks = pygame.image.load("assets/ui/tasksmenu-32x32.png")
+view_tasks = pygame.transform.scale_by(view_tasks,7)
+tasks_rect = pygame.Rect(16,16,224,224)
+
+# Import buy menu
+
+
+# Import placement overlay
 
 
 class Mo(pygame.sprite.Sprite):
