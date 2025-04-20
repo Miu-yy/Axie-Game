@@ -5,21 +5,17 @@ import button
 tank = pygame.image.load("assets/background/tank-32x32.png")
 tank = pygame.transform.scale_by(tank,16)
 
-# Import tasks TEMP
-view_tasks = pygame.image.load("assets/ui/tasksmenu-32x32.png")
-view_tasks = pygame.transform.scale_by(view_tasks,7)
-tasks_rect = pygame.Rect(16,16,224,224)
-
-# Create buttons
+# Create main buttons
 tasks_icon = button.Button("assets/ui/tasks-32x32.png", 1, 16, 16, 32, 19)
 tasks_button = button.Button("assets/ui/tasks-32x32.png", 4, 16, 16, 128, 76)
-#tasks = False
 
 buy_icon = button.Button("assets/ui/tasks-32x32.png", 1, 16, 48, 32, 19)
 buy_button = button.Button("assets/ui/tasks-32x32.png", 4, 16, 48, 128, 76)
 
 place_icon = button.Button("assets/ui/tasks-32x32.png", 1, 16, 80, 32, 19)
 place_button = button.Button("assets/ui/tasks-32x32.png", 4, 16, 80, 128, 76)
+
+
 
 # Draw background
 def background(window):
@@ -28,11 +24,11 @@ def background(window):
     window.blit(tank,location,sprite)
 
 def buttons(window,icon,button,mouse_position,mouse_click):
-    icon.draw(mouse_position, window)
+    icon.draw(window,mouse_position)
     if icon.hover:
-        if button.draw(mouse_position, window):
+        if button.draw(window,mouse_position):
             background(window)
-            if button.draw(mouse_position,window) and mouse_click:
+            if button.draw(window,mouse_position) and mouse_click:
                 background(window)
                 return True
         else:
@@ -50,8 +46,21 @@ def render(window,mouse_position,mouse_click):
 
     return tasks,buy,place
 
-def tasks_tab(window):
-    window.blit(view_tasks,tasks_rect)
+
+def render_font(window,colour,text,size,x,y):
+    pygame.font.init()
+    font = pygame.font.Font('assets/fonts/MedodicaRegular.otf', size)
+    disp_text = pygame.font.Font.render(font, text, True, colour)
+    window.blit(disp_text,(x, y))
+    pygame.display.update()
+
+def render_state(window,state):
+    if state[0]:
+        pass
+    elif state[1]:
+        pass
+    elif state[2]:
+        pass
 
 # Groups
 

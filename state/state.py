@@ -9,6 +9,7 @@ class State():
         self.tasks_menu = False
         self.buy_menu = False
         self.placing_overlay = False
+        self.state = [self.tasks_menu,self.buy_menu,self.placing_overlay]
 
         self.load_save_game()
         self.backup_save_data = load_save("save")
@@ -20,6 +21,10 @@ class State():
         self.player.tasks = save_data.get("tasks",[])
         self.player.owned_decorations = save_data.get("owned_decorations",[{"item": "weed", "level": 0}])
         self.player.placed_decorations = save_data.get("placed_decorations",[])
+
+    def update_state(self):
+        self.state = [self.tasks_menu,self.buy_menu,self.placing_overlay]
+
 
 class Player():
     def __init__(self):
@@ -38,9 +43,9 @@ class Player():
             return False
 
     def add_task(self,title,value,completed):
-        task = [{"title": title,
+        task = {"title": title,
                  "value": value,
-                 "completed": completed}]
+                 "completed": completed}
         self.tasks.append(task)
 
 

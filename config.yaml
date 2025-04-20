@@ -1,0 +1,8 @@
+---
+game:
+  screen_width = 512
+  screen_height = 256
+task_menu:
+  screen_width = 256
+  screen_height = 512
+

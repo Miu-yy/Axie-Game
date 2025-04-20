@@ -7,7 +7,7 @@ class Button():
         self.rect = pygame.Rect(x,y,width,height)
         self.hover = False
 
-    def draw(self,mouse_position,window):
+    def draw(self,window,mouse_position=(0,0)):
         window.blit(self.image,self.rect)
         if self.rect.collidepoint(mouse_position):
             self.hover = True

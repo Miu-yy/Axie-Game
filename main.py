@@ -1,5 +1,4 @@
-import pygame.time
-
+#import pygame.time
 from sprites import *
 #from render import *
 #from interactable import *
@@ -26,7 +25,8 @@ class Input():
         # TEMP
         self.state.load_save_game()
         self.state.player.update_points(5)
-        self.state.player.add_task("test",3,False)
+        self.state.player.add_task("task2",3,False)
+        self.state.player.add_task("task3",5,True)
         print(self.state.player.tasks,"/",self.state.player.points)
         # TEMP
 
@@ -41,6 +41,7 @@ class Input():
         self.tasks = False
         self.buy = False
         self.place = False
+        self.game_state = self.state.state
 
 
     def process_input(self):
@@ -85,18 +86,30 @@ class Input():
     def update_state(self):
         if self.tasks:
             self.state.tasks_menu = True
-        if self.state.tasks_menu:
-            render.tasks_tab(window)
-
-        if self.buy:
+        elif self.buy:
             self.state.buy_menu = True
-        if self.state.buy_menu:
-            render.tasks_tab(window)
-
-        if self.place:
+        elif self.place:
             self.state.placing_overlay = True
-        if self.state.placing_overlay:
-            render.tasks_tab(window)
+
+        self.state.update_state()
+        self.game_state = self.state.state
+        print(self.game_state)
+
+        if self.state.tasks_menu:
+            tasks.render_tasks_tab(window,self.state.player.tasks)
+            # num_tasks = 0
+            # for task in self.state.player.tasks:
+            #     num_tasks += 1
+            #     y = 32 + 16*num_tasks
+
+
+        #
+        # if self.state.buy_menu:
+        #     render.tasks_tab(window)
+        #
+
+        # if self.state.placing_overlay:
+        #     render.tasks_tab(window)
 
     def process_event(self):
         self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click)
@@ -117,6 +130,7 @@ class Input():
                     self.mouse_click = True
                 self.process_event()
             self.update_state()
+            render.render_state(window,self.game_state)
 
             pygame.display.update()
             clock.tick(60)
