@@ -2,7 +2,8 @@
 from sprites import *
 #from render import *
 #from interactable import *
-from ui import tasks
+from ui import *
+import ui
 from draw import render
 from state import *
 
@@ -21,13 +22,28 @@ class Input():
     def __init__(self):
         self.state = State()
         self.running = self.state.running
+        self.player = self.state.player
 
         # TEMP
         self.state.load_save_game()
-        self.state.player.update_points(5)
-        self.state.player.add_task("task2",3,False)
-        self.state.player.add_task("task3",5,True)
-        print(self.state.player.tasks,"/",self.state.player.points)
+        self.player.update_points(5)
+        self.player.add_task("task2",3,False)
+        self.player.add_task("task3",5,True)
+        print(self.player.tasks,"/",self.state.player.points)
+        #self.state.player.remove_task(4)
+        self.player.add_task("task4",5,False)
+        self.player.add_task("task5",5,False)
+        self.player.add_task("task6",5,False)
+        self.player.add_task("task7",5,False)
+        self.player.add_task("task8",5,False)
+        self.player.add_task("task9",5,False)
+        self.player.add_task("task10",5,False)
+        self.player.complete_task(2)
+        self.player.complete_task(3)
+        self.player.complete_task(7)
+
+
+        print(self.player.tasks)
         # TEMP
 
         self.mouse_move = False
@@ -42,6 +58,8 @@ class Input():
         self.buy = False
         self.place = False
         self.game_state = self.state.state
+        tasks_menu = Ui(self.player)
+
 
 
     def process_input(self):
@@ -93,7 +111,7 @@ class Input():
 
         self.state.update_state()
         self.game_state = self.state.state
-        print(self.game_state)
+        # print(self.game_state)
 
         if self.state.tasks_menu:
             tasks.render_tasks_tab(window,self.state.player.tasks)

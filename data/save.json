@@ -2,6 +2,7 @@
   "points": 0,
 
   "tasks": [ {
+    "number": 1,
     "title": "task1",
     "value": 50,
     "completed": false

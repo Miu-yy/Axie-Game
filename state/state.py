@@ -42,18 +42,36 @@ class Player():
         else:
             return False
 
-    def add_task(self,title,value,completed):
-        task = {"title": title,
+    def num_tasks(self):
+        return len(self.tasks)
+
+    def add_task(self,title,value,completed=False):
+        num = self.num_tasks()
+        task = {"number": num+1,
+                 "title": title,
                  "value": value,
                  "completed": completed}
         self.tasks.append(task)
 
 
-    def remove_task(self):
-        pass
+    def remove_task(self,number):
+        removed = False
+        index = -1
+        for index,task in enumerate(self.tasks):
+            if task["number"] == number:
+                self.tasks.remove(task)
+                removed = True
+                break
+        if removed:
+            for i,task in enumerate(self.tasks):
+                if i >= index:
+                    task["number"] -= 1
 
-    def complete_task(self):
-        pass
+
+    def complete_task(self,number):
+        for task in self.tasks:
+            if task["number"] == number:
+                task["completed"] = not task["completed"]
 
     def decoration_bought(self): # Or upgraded
         pass
