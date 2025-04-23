@@ -1,6 +1,10 @@
+import pygame
+
 from game_save import *
 import math, time
 # player and object state
+
+POINTS_UPDATED = pygame.USEREVENT + 2
 
 class State():
     def __init__(self):
@@ -23,38 +27,79 @@ class State():
         self.player.owned_decorations = save_data.get("owned_decorations",[{"item": "weed", "level": 0}])
         self.player.placed_decorations = save_data.get("placed_decorations",[])
 
+
     def update_state(self):
         self.state = [self.tasks_menu,self.buy_menu,self.placing_overlay]
+        self.player.task_pages()
+        self.player.num_pages()
+
+
+    def write_save_game(self):
+        data = {
+            "points": self.player.points,
+
+            "tasks": self.player.tasks,
+
+            "owned_decorations": self.player.owned_decorations,
+
+            "placed_decorations": self.player.placed_decorations
+        }
+
+        write_save("save",data)
 
 
 class Player():
     def __init__(self):
         self.points = 0
+        self.adding_task = False
+        self.adding_value = False
         self.player_text = ''
         self.tasks = []
         self.pages = []
         self.owned_decorations = []
         self.placed_decorations = []
 
+
     def update_points(self,points_value): # points_value can be positive (earned points), or negative (spent points)
         points = self.points
-        points += points_value
+        points += int(points_value)
         if points > 0:
             self.points = points # If can afford, action successful
+            pygame.event.post(pygame.event.Event(POINTS_UPDATED))
             return True
         else:
             return False
+
 
     def num_tasks(self):
         return len(self.tasks)
 
 
     def num_pages(self):
-        return math.ceil(self.num_tasks()/8)
+        num_pages = math.ceil((self.num_tasks()/8))
+        if self.num_tasks()%8==0:
+            num_pages += 1
+        return num_pages
 
-    def get_text_input(self,key_input):
-        self.player_text += key_input
-        print(self.player_text)
+
+    def get_text_input(self,key_input,backspace=False,enter=False):
+        if backspace:
+            self.player_text = self.player_text[0:-1]
+        elif enter:
+            if self.adding_task:
+                self.adding_task = False
+                self.adding_value = True
+                return True
+            elif self.adding_value:
+                self.adding_value = False
+                return True
+        elif self.adding_task and len(self.player_text) < 20:
+            self.player_text += key_input
+        elif self.adding_value and len(self.player_text) < 2:
+            self.player_text += key_input
+
+        return False
+
 
     def add_task(self,title,value,completed=False):
         num = self.num_tasks()
@@ -83,7 +128,10 @@ class Player():
         for task in self.tasks:
             if task["number"] == number:
                 task["completed"] = not task["completed"]
-                self.update_points(task["value"])
+                if task["completed"]:
+                    self.update_points(int(task["value"]))
+                elif not task["completed"]:
+                    self.update_points(int(task["value"])*-1)
 
 
     def task_pages(self):
@@ -102,6 +150,7 @@ class Player():
 
     def decoration_bought(self): # Or upgraded
         pass
+
 
     def decoration_placed(self):
         pass

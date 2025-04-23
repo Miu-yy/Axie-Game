@@ -15,8 +15,8 @@ def write_save(filename,data):
     with open(filepath,'w') as output_file:
         json.dump(data,output_file,indent=2)
 
-#data = load_save("save")
-
+# data = load_save("save")
+#
 # data = {
 #   "log": 0,
 #   "rock": 0,

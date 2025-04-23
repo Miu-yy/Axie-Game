@@ -31,22 +31,6 @@ class Input():
 
         # TEMP
         self.state.load_save_game()
-        self.player.update_points(5)
-        self.player.add_task("Task2",3,False)
-        self.player.add_task("TASK3",5,True)
-        #self.state.player.remove_task(4)
-        self.player.add_task("task4",5,False)
-        self.player.add_task("task5",5,False)
-        self.player.add_task("task6",5,False)
-        self.player.add_task("task7",5,False)
-        self.player.add_task("task8",5,False)
-        self.player.add_task("task9",5,False)
-        self.player.add_task("task10",5,False)
-        self.player.add_task("task11",5,False)
-        self.player.complete_task(2)
-        self.player.complete_task(3)
-        self.player.complete_task(7)
-
         self.player.task_pages()
         # TEMP
 
@@ -55,6 +39,15 @@ class Input():
         self.mouse_pos = (0,0)
         self.mouse_button = 0
         self.key_input = ''
+        self.backspace = False
+        self.enter = False
+        self.is_digit = False
+
+        self.task_title_received = False
+        self.task_value_received = False
+        self.task_title = ''
+        self.task_value = ''
+
 
         self.hover_little = False
         self.hover_button = False
@@ -119,16 +112,38 @@ class Input():
 
         self.state.update_state()
         self.game_state = self.state.state
+        #print(self.player.num_pages())
+        #print(self.player.num_tasks())
+
 
         if self.state.tasks_menu:
             if not self.tasks_menu.render_tasks_tab(window,self.mouse_pos,self.mouse_click):
                 self.state.tasks_menu = False
                 pygame.event.post(pygame.event.Event(MENU_QUIT))
-            if self.key_input != '':
-                self.player.get_text_input(self.key_input)
+            if self.player.adding_task:
+                self.task_title_received = self.player.get_text_input(self.key_input,self.backspace,self.enter)
+                self.backspace = False
+                if self.task_title_received:
+                    self.task_title = self.player.player_text
+                    self.player.player_text = ''
+                    self.enter = False
+            if self.player.adding_value:
+                if self.is_digit or self.backspace or self.enter:
+                    self.task_value_received = self.player.get_text_input(self.key_input,self.backspace,self.enter)
+                    self.backspace = False
+                    if self.task_value_received:
+                        self.task_value = self.tasks_menu.new_task_value
+                        self.player.player_text = ''
+                        self.enter = False
+            self.key_input = ''
+            if self.task_title_received and self.task_value_received:
+                self.task_title_received = False
+                self.task_value_received = False
+                self.player.add_task(self.task_title,self.task_value)
+                self.player.task_pages()
 
     def process_event(self):
-        self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click)
+        self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click,self.player.points)
 
     def game_loop(self):
         while self.running:
@@ -136,6 +151,7 @@ class Input():
             self.mouse_click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.state.write_save_game()
                     self.running = False
                 elif event.type == pygame.MOUSEMOTION:
                     self.mouse_pos = event.pos
@@ -146,6 +162,11 @@ class Input():
                     self.mouse_click = True
                 if event.type == pygame.KEYDOWN:
                     self.key_input = event.unicode
+                    self.is_digit = event.unicode.isdigit()
+                    if event.type == pygame.K_BACKSPACE:
+                        self.backspace = True
+                    if event.key == pygame.K_RETURN:
+                        self.enter = True
 
                 self.process_event()
             self.update_state()

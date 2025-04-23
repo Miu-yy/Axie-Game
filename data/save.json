@@ -1,22 +1,43 @@
 {
-  "points": 0,
-
-  "tasks": [ {
-    "number": 1,
-    "title": "task1",
-    "value": 50,
-    "completed": false
-  } ],
-
-  "owned_decorations": [ {
-    "item": "weed",
-    "level": 0
-  } ],
-
-  "placed_decorations": [ {
-    "item": "weed",
-    "level": 0,
-    "x": 1000,
-    "y": 1000
-  } ]
+  "points": 66,
+  "tasks": [
+    {
+      "number": 1,
+      "title": "task1",
+      "value": 50,
+      "completed": true
+    },
+    {
+      "number": 2,
+      "title": "Task2",
+      "value": 3,
+      "completed": true
+    },
+    {
+      "number": 3,
+      "title": "Task3",
+      "value": 3,
+      "completed": true
+    },
+    {
+      "number": 4,
+      "title": "Portia",
+      "value": "9",
+      "completed": false
+    }
+  ],
+  "owned_decorations": [
+    {
+      "item": "weed",
+      "level": 0
+    }
+  ],
+  "placed_decorations": [
+    {
+      "item": "weed",
+      "level": 0,
+      "x": 1000,
+      "y": 1000
+    }
+  ]
 }
