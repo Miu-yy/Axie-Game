@@ -1,4 +1,5 @@
 from game_save import *
+import math, time
 # player and object state
 
 class State():
@@ -29,7 +30,9 @@ class State():
 class Player():
     def __init__(self):
         self.points = 0
+        self.player_text = ''
         self.tasks = []
+        self.pages = []
         self.owned_decorations = []
         self.placed_decorations = []
 
@@ -44,6 +47,14 @@ class Player():
 
     def num_tasks(self):
         return len(self.tasks)
+
+
+    def num_pages(self):
+        return math.ceil(self.num_tasks()/8)
+
+    def get_text_input(self,key_input):
+        self.player_text += key_input
+        print(self.player_text)
 
     def add_task(self,title,value,completed=False):
         num = self.num_tasks()
@@ -72,6 +83,22 @@ class Player():
         for task in self.tasks:
             if task["number"] == number:
                 task["completed"] = not task["completed"]
+                self.update_points(task["value"])
+
+
+    def task_pages(self):
+        self.pages = []
+        x = 0
+        page = []
+        for task in self.tasks:
+            page.append(task)
+            x += 1
+            if x%8 == 0:
+                self.pages.append(page)
+                page = []
+                x = 0
+        self.pages.append(page)
+
 
     def decoration_bought(self): # Or upgraded
         pass

@@ -24,11 +24,11 @@ def background(window):
     window.blit(tank,location,sprite)
 
 def buttons(window,icon,button,mouse_position,mouse_click):
-    icon.draw(window,mouse_position)
+    icon.draw_hover(window,mouse_position)
     if icon.hover:
-        if button.draw(window,mouse_position):
+        if button.draw_hover(window,mouse_position):
             background(window)
-            if button.draw(window,mouse_position) and mouse_click:
+            if button.draw_hover(window,mouse_position) and mouse_click:
                 background(window)
                 return True
         else:
@@ -50,9 +50,8 @@ def render(window,mouse_position,mouse_click):
 def render_font(window,colour,text,size,x,y):
     pygame.font.init()
     font = pygame.font.Font('assets/fonts/MedodicaRegular.otf', size)
-    disp_text = pygame.font.Font.render(font, text, True, colour)
+    disp_text = pygame.font.Font.render(font, text, True, colour,(230,212,179))
     window.blit(disp_text,(x, y))
-    pygame.display.update()
 
 def render_state(window,state):
     if state[0]:

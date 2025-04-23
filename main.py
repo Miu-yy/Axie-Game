@@ -1,9 +1,12 @@
 #import pygame.time
+import pygame
+
 from sprites import *
 #from render import *
 #from interactable import *
-from ui import *
-import ui
+from ui import ui
+from ui import tasks
+#import ui
 from draw import render
 from state import *
 
@@ -18,6 +21,8 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Axie Game')
 pygame.display.set_icon(image)
 
+MENU_QUIT = pygame.USEREVENT + 1
+
 class Input():
     def __init__(self):
         self.state = State()
@@ -27,9 +32,8 @@ class Input():
         # TEMP
         self.state.load_save_game()
         self.player.update_points(5)
-        self.player.add_task("task2",3,False)
-        self.player.add_task("task3",5,True)
-        print(self.player.tasks,"/",self.state.player.points)
+        self.player.add_task("Task2",3,False)
+        self.player.add_task("TASK3",5,True)
         #self.state.player.remove_task(4)
         self.player.add_task("task4",5,False)
         self.player.add_task("task5",5,False)
@@ -38,18 +42,19 @@ class Input():
         self.player.add_task("task8",5,False)
         self.player.add_task("task9",5,False)
         self.player.add_task("task10",5,False)
+        self.player.add_task("task11",5,False)
         self.player.complete_task(2)
         self.player.complete_task(3)
         self.player.complete_task(7)
 
-
-        print(self.player.tasks)
+        self.player.task_pages()
         # TEMP
 
         self.mouse_move = False
         self.mouse_click = False
         self.mouse_pos = (0,0)
         self.mouse_button = 0
+        self.key_input = ''
 
         self.hover_little = False
         self.hover_button = False
@@ -58,7 +63,8 @@ class Input():
         self.buy = False
         self.place = False
         self.game_state = self.state.state
-        tasks_menu = Ui(self.player)
+
+        self.tasks_menu = tasks.Tasks(self.player)
 
 
 
@@ -76,9 +82,10 @@ class Input():
     def get_input(self):
         while self.running:
             render.render(window)
-            self.tasks = tasks.render_tasks(window, self.tasks, self.mouse_pos, self.mouse_click)
+            #self.tasks = tasks.render_tasks(window, self.tasks, self.mouse_pos, self.mouse_click)
             if self.tasks:
-                render.tasks_tab(window)
+                pass
+               # ui.tasks.render.tasks_tab(window)
             # self.hover_little = render.tasks_little.draw(self.mouse_pos, window)
             # if self.hover_little and not self.tasks:
             #     render.render(window)
@@ -100,6 +107,7 @@ class Input():
                 self.process_input()
             pygame.display.update()
             clock.tick(60)
+            print("?")
 
     def update_state(self):
         if self.tasks:
@@ -111,23 +119,13 @@ class Input():
 
         self.state.update_state()
         self.game_state = self.state.state
-        # print(self.game_state)
 
         if self.state.tasks_menu:
-            tasks.render_tasks_tab(window,self.state.player.tasks)
-            # num_tasks = 0
-            # for task in self.state.player.tasks:
-            #     num_tasks += 1
-            #     y = 32 + 16*num_tasks
-
-
-        #
-        # if self.state.buy_menu:
-        #     render.tasks_tab(window)
-        #
-
-        # if self.state.placing_overlay:
-        #     render.tasks_tab(window)
+            if not self.tasks_menu.render_tasks_tab(window,self.mouse_pos,self.mouse_click):
+                self.state.tasks_menu = False
+                pygame.event.post(pygame.event.Event(MENU_QUIT))
+            if self.key_input != '':
+                self.player.get_text_input(self.key_input)
 
     def process_event(self):
         self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click)
@@ -146,9 +144,12 @@ class Input():
                     self.mouse_pos = event.pos
                     self.mouse_button = event.button
                     self.mouse_click = True
+                if event.type == pygame.KEYDOWN:
+                    self.key_input = event.unicode
+
                 self.process_event()
             self.update_state()
-            render.render_state(window,self.game_state)
+            #render.render_state(window,self.game_state)
 
             pygame.display.update()
             clock.tick(60)
