@@ -1,5 +1,6 @@
 #import pygame.time
 import pygame
+from PIL.ImageChops import screen
 
 from sprites import *
 #from render import *
@@ -15,16 +16,32 @@ sprites = pygame.transform.scale_by(sprites, 4)
 rect = pygame.Rect(0, 0, 60, 60)
 image = sprites.subsurface(rect)
 
-window = pygame.display.set_mode((512,256))
+min_width = 512
+min_height = 256
+max_width = 1024
+max_height = 512
+aspect_ratio = 512/256
+
+window = pygame.display.set_mode((512,256),pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 pygame.display.set_caption('Axie Game')
 pygame.display.set_icon(image)
 
+# Custom events
 MENU_QUIT = pygame.USEREVENT + 1
+POINTS_UPDATED = pygame.USEREVENT + 2
+TASK_REMOVED = pygame.USEREVENT + 3
+
 
 class Input():
     def __init__(self):
+        self.window = window
+        self.screen = pygame.Surface((512,256))
+
+        self.width = min_width
+        self.height = min_height
+
         self.state = State()
         self.running = self.state.running
         self.player = self.state.player
@@ -60,48 +77,6 @@ class Input():
         self.tasks_menu = tasks.Tasks(self.player)
 
 
-
-    def process_input(self):
-        pass
-        # if self.tasks:
-        #     render.tasks_tab(window)
-        #tasks()
-               # if self.hover_little:
-        #     if self.hover_button and self.mouse_click:
-        #         self.tasks = True
-        # else:
-        #     pass
-
-    def get_input(self):
-        while self.running:
-            render.render(window)
-            #self.tasks = tasks.render_tasks(window, self.tasks, self.mouse_pos, self.mouse_click)
-            if self.tasks:
-                pass
-               # ui.tasks.render.tasks_tab(window)
-            # self.hover_little = render.tasks_little.draw(self.mouse_pos, window)
-            # if self.hover_little and not self.tasks:
-            #     render.render(window)
-            #     self.hover_button = render.tasks_button.draw(self.mouse_pos, window)
-            # if self.tasks:
-            #     render.tasks_tab(window)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    break
-                elif event.type == pygame.MOUSEMOTION:
-                    self.mouse_pos = event.pos
-                    self.mouse_move = True
-                    #tasks = tasksLittle.draw(mouse_pos, window)
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    self.mouse_pos = event.pos
-                    self.mouse_button = event.button
-                    self.mouse_click = True
-                self.process_input()
-            pygame.display.update()
-            clock.tick(60)
-            print("?")
-
     def update_state(self):
         if self.tasks:
             self.state.tasks_menu = True
@@ -117,7 +92,7 @@ class Input():
 
 
         if self.state.tasks_menu:
-            if not self.tasks_menu.render_tasks_tab(window,self.mouse_pos,self.mouse_click):
+            if not self.tasks_menu.render_tasks_tab(self.screen,self.mouse_pos,self.mouse_click):
                 self.state.tasks_menu = False
                 pygame.event.post(pygame.event.Event(MENU_QUIT))
             if self.player.adding_task:
@@ -143,7 +118,7 @@ class Input():
                 self.player.task_pages()
 
     def process_event(self):
-        self.tasks,self.buy,self.place = render.render(window,self.mouse_pos,self.mouse_click,self.player.points)
+        self.tasks,self.buy,self.place = render.render(self.screen,self.mouse_pos,self.mouse_click,self.player.points)
 
     def game_loop(self):
         while self.running:
@@ -153,11 +128,33 @@ class Input():
                 if event.type == pygame.QUIT:
                     self.state.write_save_game()
                     self.running = False
+                elif event.type == pygame.VIDEORESIZE:
+                    if event.w < min_width:
+                        self.width = min_width
+                    elif event.w > max_width:
+                        self.width = max_width
+                    else:
+                        self.width = event.w
+                    if event.h < min_height:
+                        self.height = min_height
+                    elif event.h > max_height:
+                        self.height = max_height
+                    else:
+                        self.height = event.h
+                    if event.w/event.h != aspect_ratio:
+                        self.height = self.width/2
+                    self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
                 elif event.type == pygame.MOUSEMOTION:
                     self.mouse_pos = event.pos
+                    # self.mouse_pos[0] = self.mouse_pos[0]/self.width*512
+                    # self.mouse_pos[1] = self.mouse_pos[1]/self.height*256
+                    # self.mouse_pos = tuple(self.mouse_pos)
                     self.mouse_move = True
                 elif event.type == pygame.MOUSEBUTTONUP:
                     self.mouse_pos = event.pos
+                    # self.mouse_pos[0] = self.mouse_pos[0]/self.width*512
+                    # self.mouse_pos[1] = self.mouse_pos[1]/self.height*256
+                    # self.mouse_pos = tuple(self.mouse_pos)
                     self.mouse_button = event.button
                     self.mouse_click = True
                 if event.type == pygame.KEYDOWN:
@@ -167,11 +164,13 @@ class Input():
                         self.backspace = True
                     if event.key == pygame.K_RETURN:
                         self.enter = True
-
+                self.mouse_pos = list(self.mouse_pos)
+                self.mouse_pos[0] = self.mouse_pos[0] / self.width * 512
+                self.mouse_pos[1] = self.mouse_pos[1] / self.height * 256
+                self.mouse_pos = tuple(self.mouse_pos)
                 self.process_event()
             self.update_state()
-            #render.render_state(window,self.game_state)
-
+            self.window.blit(pygame.transform.scale(self.screen,(self.width,self.height)))
             pygame.display.update()
             clock.tick(60)
 

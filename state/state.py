@@ -2,9 +2,12 @@ import pygame
 
 from game_save import *
 import math, time
-# player and object state
+
 
 POINTS_UPDATED = pygame.USEREVENT + 2
+
+# player and object state
+
 
 class State():
     def __init__(self):
@@ -53,6 +56,7 @@ class Player():
         self.points = 0
         self.adding_task = False
         self.adding_value = False
+        self.removing_task = False
         self.player_text = ''
         self.tasks = []
         self.pages = []

@@ -1,28 +1,16 @@
 {
-  "points": 66,
+  "points": 0,
   "tasks": [
     {
       "number": 1,
-      "title": "task1",
-      "value": 50,
-      "completed": true
+      "title": "Add tasks",
+      "value": "5",
+      "completed": false
     },
     {
       "number": 2,
-      "title": "Task2",
-      "value": 3,
-      "completed": true
-    },
-    {
-      "number": 3,
-      "title": "Task3",
-      "value": 3,
-      "completed": true
-    },
-    {
-      "number": 4,
-      "title": "Portia",
-      "value": "9",
+      "title": "Add backspace\b",
+      "value": "5",
       "completed": false
     }
   ],
